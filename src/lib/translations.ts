@@ -1,37 +1,24 @@
-import i18n from '@sveltekit-i18n/base';
-import type { Config } from '@sveltekit-i18n/base';
+import i18n from "@sveltekit-i18n/base";
 
-let i18nInstance= null;
+type Loaders = {
+    locale: string;
+    key: string;
+    loader: () => Promise<Record<string, any>>;
+}[]
 
-export function initI18n(userConfig: Omit<Config, 'parser'>) {
-	const config = {
-		...userConfig,
-		parser: {
-			parse(value: string, [props]: Record<string, any>[], locale: string) {
-				return { value, props, locale };
-			}
-		}
-	};
+let userLoaders: Loaders = []
 
-	i18nInstance = new i18n(config);
-	return i18nInstance;
+export function initI18N(loaders: Loaders) {
+  userLoaders = loaders
 }
 
-function getI18n() {
-	if (!i18nInstance) {
-		throw new Error(
-			'sveltekit-mf2: i18n not initialized. Call initI18n() in your app before using translation features.'
-		);
-	}
-	return i18nInstance;
-}
+const config = {
+  loaders: userLoaders,
+  parser: {
+    parse(value: string, [props]: Record<string, any>[], locale: string) {
+      return { value, props, locale}
+    }
+  }  
+};
 
-export const t = $derived(getI18n().t);
-export const locale = $derived(getI18n().locale);
-export const locales = $derived(getI18n().locales);
-export const loading = $derived(getI18n().loading);
-export const setLocale = (...args: Parameters<ReturnType<typeof i18n>['setLocale']>) =>
-	getI18n().setLocale(...args);
-export const loadTranslations = (
-	...args: Parameters<ReturnType<typeof i18n>['loadTranslations']>
-) => getI18n().loadTranslations(...args);
+export const {setLocale, t, locale, locales, loading, loadTranslations } = new i18n(config);

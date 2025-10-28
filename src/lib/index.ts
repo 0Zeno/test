@@ -1,5 +1,5 @@
-export { default as Formatter } from "./Formatter.svelte";
+export { initI18N } from "./translations.js";
 
-export { initI18n, setLocale, locale, locales, loading, loadTranslations } from "./translations.js";
+export { default as Formatter } from "./Formatter.svelte";
 
 export type { MessagePart, MessageMarkupPart } from 'messageformat';    
