@@ -1,4 +1,4 @@
-export { initI18N } from "./translations.js";
+export { type Loaders,  initI18N, setLocale, t, locale, locales, loading, loadTranslations  } from "./translations.js";
 
 export { default as Formatter } from "./Formatter.svelte";
 

@@ -1,3 +1,23 @@
-<h1>Welcome to your library project</h1>
-<p>Create your package using @sveltejs/package and preview/showcase your work with SvelteKit</p>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+  import { initI18N, setLocale, loading, loadTranslations } from "$lib/translations.js" 
+  import Formatter from "$lib/Formatter.svelte"
+
+  initI18N([
+        {
+        locale: 'en',
+        key: 'common',
+        loader: async () => ({
+            greeting: 'Hello {name}!',
+            welcome: 'Welcome to {#bold}our site{/bold}'
+        })
+        }
+    ]);
+    setLocale("en")
+</script>
+
+
+<h1>Testing sveltekit-mf2</h1>
+
+<Formatter id="common.greeting" props={{ name: 'World' }} />
+<br>
+<Formatter id="common.welcome" props={{}} />

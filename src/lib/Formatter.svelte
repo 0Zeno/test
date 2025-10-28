@@ -1,14 +1,17 @@
 <script lang="ts">
   import { t } from "$lib/translations.js";
   import { MessageFormat } from "messageformat";
-	import { partsToTree, type TreeNode } from "./partsToTree.js";
+  import { partsToTree, type TreeNode } from "./partsToTree.js";
 
   const { id, props } = $props();
 
   const trans = $derived($t(id, props));
-  const mf = $derived(new MessageFormat(trans.locale, trans.value));
-  const translation = $derived(mf.formatToParts(props));
+  const mf = $derived(trans.value && trans.value.trim() ? new MessageFormat(trans.value, trans.locale) : null);
+  
+
+  const translation = $derived(mf ? mf.formatToParts(props || {}) : []);
   const tree = $derived(partsToTree(translation));
+  
 </script>
 
 {#snippet renderNode(node: TreeNode)}
@@ -52,6 +55,11 @@
   {/if}
 {/snippet}
 
-{#each tree as node}
-  {@render renderNode(node)}
-{/each}
+{#if trans.value}
+  {#each tree as node}
+    {@render renderNode(node)}
+  {/each}
+{:else}
+  <!-- Show the key as fallback -->
+  <span style="color: orange;">[{id}]</span>
+{/if}

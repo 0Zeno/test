@@ -1,6 +1,6 @@
 import i18n from "@sveltekit-i18n/base";
 
-type Loaders = {
+export type Loaders = {
     locale: string;
     key: string;
     loader: () => Promise<Record<string, any>>;
@@ -15,8 +15,11 @@ export function initI18N(loaders: Loaders) {
 const config = {
   loaders: userLoaders,
   parser: {
-    parse(value: string, [props]: Record<string, any>[], locale: string) {
-      return { value, props, locale}
+    parse(value: string, [props]: [Record<string, any>] | [], locale: string) {
+      if (!value || typeof value !== 'string') {
+        return { value: '', props: props || {}, locale }
+      }
+      return { value, props: props || {}, locale }
     }
   }  
 };
